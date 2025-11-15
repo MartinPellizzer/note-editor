@@ -9,6 +9,8 @@ camera = {
 mouse = {
     'pos_x': 0,
     'pos_y': 0,
+    'screen_x': 0,
+    'screen_y': 0,
     'row_i': 0,
     'col_i': 0,
     'action_executing': 0,
@@ -28,6 +30,7 @@ mouse = {
     'draw_line_start_y': 0,
     'draw_line_end_x': 0,
     'draw_line_end_y': 0,
+    'right_click_action_executing': 0,
 }
 
 def mouse_pos_get(pygame):

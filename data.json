@@ -1,0 +1,72 @@
+[
+    {
+        "id": 0,
+        "world_x": 128,
+        "world_y": 179,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 128,
+        "screen_y": 179,
+        "screen_w": 100,
+        "screen_h": 100,
+        "lines": [
+            "Apothecary Academy"
+        ]
+    },
+    {
+        "id": 1,
+        "world_x": 683,
+        "world_y": 185,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 683,
+        "screen_y": 185,
+        "screen_w": 100,
+        "screen_h": 100,
+        "lines": [
+            "Herbal Preparations"
+        ]
+    },
+    {
+        "id": 2,
+        "world_x": 687,
+        "world_y": 249,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 687,
+        "screen_y": 249,
+        "screen_w": 100,
+        "screen_h": 100,
+        "lines": [
+            "Tinctures"
+        ]
+    },
+    {
+        "id": 3,
+        "world_x": 688,
+        "world_y": 313,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 688,
+        "screen_y": 313,
+        "screen_w": 100,
+        "screen_h": 100,
+        "lines": [
+            "Teas"
+        ]
+    },
+    {
+        "id": 4,
+        "world_x": 688,
+        "world_y": 374,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 688,
+        "screen_y": 374,
+        "screen_w": 100,
+        "screen_h": 100,
+        "lines": [
+            "Salves"
+        ]
+    }
+]
