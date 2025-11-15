@@ -15,12 +15,12 @@
     },
     {
         "id": 1,
-        "world_x": 683,
-        "world_y": 185,
+        "world_x": 123,
+        "world_y": 299,
         "world_w": 100,
         "world_h": 100,
-        "screen_x": 683,
-        "screen_y": 185,
+        "screen_x": 123,
+        "screen_y": 299,
         "screen_w": 100,
         "screen_h": 100,
         "lines": [
@@ -29,12 +29,12 @@
     },
     {
         "id": 2,
-        "world_x": 687,
-        "world_y": 249,
+        "world_x": -82,
+        "world_y": 422,
         "world_w": 100,
         "world_h": 100,
-        "screen_x": 687,
-        "screen_y": 249,
+        "screen_x": -82,
+        "screen_y": 422,
         "screen_w": 100,
         "screen_h": 100,
         "lines": [
@@ -43,12 +43,12 @@
     },
     {
         "id": 3,
-        "world_x": 688,
-        "world_y": 313,
+        "world_x": 120,
+        "world_y": 420,
         "world_w": 100,
         "world_h": 100,
-        "screen_x": 688,
-        "screen_y": 313,
+        "screen_x": 120,
+        "screen_y": 420,
         "screen_w": 100,
         "screen_h": 100,
         "lines": [
@@ -57,16 +57,30 @@
     },
     {
         "id": 4,
-        "world_x": 688,
-        "world_y": 374,
+        "world_x": 261,
+        "world_y": 420,
         "world_w": 100,
         "world_h": 100,
-        "screen_x": 688,
-        "screen_y": 374,
+        "screen_x": 261,
+        "screen_y": 420,
         "screen_w": 100,
         "screen_h": 100,
         "lines": [
             "Salves"
+        ]
+    },
+    {
+        "id": 5,
+        "world_x": 438,
+        "world_y": 417,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 438,
+        "screen_y": 417,
+        "screen_w": 100,
+        "screen_h": 100,
+        "lines": [
+            "Lotions"
         ]
     }
 ]

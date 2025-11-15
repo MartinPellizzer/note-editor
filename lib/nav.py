@@ -7,8 +7,8 @@ camera = {
 }
 
 mouse = {
-    'pos_x': 0,
-    'pos_y': 0,
+    'world_x': 0,
+    'world_y': 0,
     'screen_x': 0,
     'screen_y': 0,
     'row_i': 0,
@@ -33,18 +33,18 @@ mouse = {
     'right_click_action_executing': 0,
 }
 
-def mouse_pos_get(pygame):
-    mouse['pos_x'], mouse['pos_y'] = pygame.mouse.get_pos()
+def mouse_pos_get(pygame, window_w, window_h):
+    mouse['world_x'], mouse['world_y'] = pygame.mouse.get_pos()
 
 def pan_start(pygame):
     if mouse['pan_executing'] == 0:
-        mouse['pan_mouse_start_x'] = mouse['pos_x']
-        mouse['pan_mouse_start_y'] = mouse['pos_y']
+        mouse['pan_mouse_start_x'] = mouse['world_x']
+        mouse['pan_mouse_start_y'] = mouse['world_y']
         mouse['pan_camera_start_x'] = camera['pan_x']
         mouse['pan_camera_start_y'] = camera['pan_y']
     mouse['pan_executing'] = 1
-    camera['pan_x'] = mouse['pan_camera_start_x'] + (mouse['pos_x'] - mouse['pan_mouse_start_x']) // camera['zoom']
-    camera['pan_y'] = mouse['pan_camera_start_y'] + (mouse['pos_y'] - mouse['pan_mouse_start_y']) // camera['zoom']
+    camera['pan_x'] = mouse['pan_camera_start_x'] + (mouse['world_x'] - mouse['pan_mouse_start_x']) // camera['zoom']
+    camera['pan_y'] = mouse['pan_camera_start_y'] + (mouse['world_y'] - mouse['pan_mouse_start_y']) // camera['zoom']
 
 def pan_stop():
     mouse['pan_executing'] = 0

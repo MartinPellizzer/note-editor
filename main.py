@@ -13,8 +13,11 @@ window_w = 1920
 window_h = 1080
 window = pygame.display.set_mode((window_w, window_h))
 pygame.key.set_repeat(300, 50)
+font_filepath = f'''fonts/CourierPrime-Regular.ttf'''
 font_md_base = 32
-font_md = pygame.font.Font(f'''fonts/CourierPrime-Regular.ttf''', font_md_base)
+font_md = pygame.font.Font(font_filepath, font_md_base)
+font_sm_base = 16
+font_sm = pygame.font.Font(font_filepath, font_sm_base)
 
 def textarea_create(_id, world_x, world_y, lines):
     obj = {
@@ -47,6 +50,7 @@ textareas.append(textarea)
 
 textarea_i = 0
 
+
 def save_json():
     with open('data.json', 'w', encoding='utf-8') as f:
         json.dump(textareas, f, indent=4, ensure_ascii=False)
@@ -56,10 +60,11 @@ def load_json():
     with open('data.json', 'r', encoding='utf-8') as f:
         textareas = json.load(f)
 
-load_json()
+# load_json()
 
 def main_input():
     global running
+    global font_sm
     global font_md
     global line_cursor_row_i
     global line_cursor_col_i
@@ -145,28 +150,32 @@ def main_input():
             if event.y > 0:
                 if camera['zoom'] < 16:
                     camera['zoom'] += 1
-                    font_md = pygame.font.Font(None, font_md_base * camera['zoom'])
+                    font_md = pygame.font.Font(font_filepath, font_md_base * camera['zoom'])
+                    font_sm = pygame.font.Font(font_filepath, font_sm_base * camera['zoom'])
             elif event.y < 0:
                 if camera['zoom'] > 1:
                     camera['zoom'] -= 1
-                    font_md = pygame.font.Font(None, font_md_base * camera['zoom'])
+                    font_md = pygame.font.Font(font_filepath, font_md_base * camera['zoom'])
+                    font_sm = pygame.font.Font(font_filepath, font_sm_base * camera['zoom'])
 
-    nav.mouse_pos_get(pygame)
+    nav.mouse_pos_get(pygame, window_w, window_h)
     if pygame.mouse.get_pressed()[0]:
         if mouse['action_executing'] == 0:
             mouse['action_executing'] = 1
             for textarea_index, textarea in enumerate(textareas):
-                if (mouse['pos_x'] > textarea['screen_x'] and 
-                    mouse['pos_y'] > textarea['screen_y'] and 
-                    mouse['pos_x'] < textarea['screen_x'] + textarea['screen_w'] and 
-                    mouse['pos_y'] < textarea['screen_y'] + textarea['screen_h']
+                if (mouse['world_x'] > textarea['screen_x'] and 
+                    mouse['world_y'] > textarea['screen_y'] and 
+                    mouse['world_x'] < textarea['screen_x'] + textarea['screen_w'] and 
+                    mouse['world_y'] < textarea['screen_y'] + textarea['screen_h']
                 ):
-                    mouse['drag_mouse_start_x'] = mouse['pos_x']
-                    mouse['drag_mouse_start_y'] = mouse['pos_y']
+                    mouse['drag_mouse_start_x'] = mouse['world_x']
+                    mouse['drag_mouse_start_y'] = mouse['world_y']
                     mouse['drag_node_id'] = textarea['id']
                     mouse['drag_node_start_x'] = textarea['world_x']
                     mouse['drag_node_start_y'] = textarea['world_y']
                     mouse['drag_executing'] = 1
+                    if textarea_i != textarea_index:
+                        line_cursor_col_i = 0
                     textarea_i = textarea_index
                     break
     else: 
@@ -196,14 +205,15 @@ def main_update():
         textarea['screen_y'] = (textarea['world_y'] + camera['pan_y']) * camera['zoom'] + offset_y
         textarea['screen_w'] = (textarea['world_w'] * camera['zoom'])
         textarea['screen_h'] = (textarea['world_h'] * camera['zoom'])
-    mouse['screen_x'] = (mouse['pos_x'] + camera['pan_x']) * camera['zoom'] + offset_x
-    mouse['screen_y'] = (mouse['pos_y'] + camera['pan_y']) * camera['zoom'] + offset_x
+    mouse['screen_x'] = (mouse['world_x'] - offset_x) / camera['zoom'] - camera['pan_x']
+    mouse['screen_y'] = (mouse['world_y'] - offset_y) / camera['zoom'] - camera['pan_y']
+    ### drag
     if mouse['drag_executing'] == 1:
         if mouse['drag_node_id'] != None:
             for textarea in textareas:
                 if textarea['id'] == mouse['drag_node_id']:
-                    textarea['world_x'] = mouse['drag_node_start_x'] + (mouse['pos_x'] - mouse['drag_mouse_start_x']) // camera['zoom']
-                    textarea['world_y'] = mouse['drag_node_start_y'] + (mouse['pos_y'] - mouse['drag_mouse_start_y']) // camera['zoom']
+                    textarea['world_x'] = mouse['drag_node_start_x'] + (mouse['world_x'] - mouse['drag_mouse_start_x']) // camera['zoom']
+                    textarea['world_y'] = mouse['drag_node_start_y'] + (mouse['world_y'] - mouse['drag_mouse_start_y']) // camera['zoom']
 
 ### convert world coordinates to screen coordinates
 def world_to_screen(world_pos_x, world_pos_y):
@@ -238,10 +248,57 @@ def render_text():
             w = 1 * camera['zoom']
             h = line_h
             pygame.draw.rect(window, "#ffffff", (x, y, w, h))
+        # debub
+        text_surface = font_md.render(f'''{textarea['world_x']} - {textarea['world_y']}''', True, '0xFF00FF00')
+        window.blit(text_surface, (textarea['screen_x'], textarea['screen_y'] - line_h*2))
+        text_surface = font_md.render(f'''{textarea['screen_x']} - {textarea['screen_y']}''', True, '0xFF00FF00')
+        window.blit(text_surface, (textarea['screen_x'], textarea['screen_y'] - line_h))
+
+def render_grid():
+    cell_size = 100
+    '''
+    for col_i in range(-100, 100):
+        x1 = ((cell_size * col_i) + camera['pan_x']) * camera['zoom'] + offset_x
+        y1 = 0
+        x2 = ((cell_size * col_i) + camera['pan_x']) * camera['zoom'] + offset_x
+        y2 = window_h
+        pygame.draw.line(window, '#333333', (x1, y1), (x2, y2), 1)
+    for row_i in range(-100, 100):
+        x1 = 0
+        y1 = ((cell_size * row_i) + camera['pan_y']) * camera['zoom'] + offset_y
+        x2 = window_w
+        y2 = ((cell_size * row_i) + camera['pan_y']) * camera['zoom'] + offset_y
+        pygame.draw.line(window, '#333333', (x1, y1), (x2, y2), 1)
+    for col_i in range(-10, 10):
+        for row_i in range(-10, 10):
+            x1 = ((cell_size * col_i) + camera['pan_x']) * camera['zoom'] + offset_x
+            y1 = ((cell_size * row_i) + camera['pan_y']) * camera['zoom'] + offset_y
+            text_surface = font_md.render(f'x', True, '0xFF00FF00')
+            window.blit(text_surface, (x1, x2))
+    '''
+    for col_i in range(-20, 20):
+        for row_i in range(-20, 20):
+            world_x = cell_size * col_i
+            world_y = cell_size * row_i
+            x = (world_x + camera['pan_x']) * camera['zoom'] + offset_x
+            y = (world_y + camera['pan_y']) * camera['zoom'] + offset_y
+            w = cell_size * camera['zoom']
+            h = cell_size * camera['zoom']
+            pygame.draw.rect(window, "#333333", (x, y, w, h), 1)
+            text_surface = font_sm.render(f'x:{world_x}', True, '#303030')
+            window.blit(text_surface, (x, y))
+            text_surface = font_sm.render(f'y:{world_y}', True, '#303030')
+            window.blit(text_surface, (x, y+16*camera['zoom']))
 
 def main_render():
     window.fill('#111111')
+    render_grid()
     render_text()
+    # debug
+    text_surface = font_md.render(f'''{mouse['world_x']} - {mouse['world_y']}''', True, '0xFF00FF00')
+    window.blit(text_surface, (600, 0))
+    text_surface = font_md.render(f'''{mouse['screen_x']} - {mouse['screen_y']}''', True, '0xFF00FF00')
+    window.blit(text_surface, (600, 48))
     pygame.display.flip()
 
 running = True
