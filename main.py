@@ -1,4 +1,6 @@
 import pygame
+
+import os
 import json
 
 from lib import nav
@@ -11,7 +13,10 @@ offset_y = 0
 pygame.init()
 window_w = 1920
 window_h = 1080
-window = pygame.display.set_mode((window_w, window_h))
+window = pygame.display.set_mode(
+    (window_w, window_h),
+    pygame.RESIZABLE,
+)
 pygame.key.set_repeat(300, 50)
 font_filepath = f'''fonts/CourierPrime-Regular.ttf'''
 camera['zoom'] = 2
@@ -52,6 +57,7 @@ line_cursor_row_i = 0
 line_cursor_col_i = 0
 textareas = []
 
+'''
 text = 'sample text'
 lines = text.split()
 textarea = textarea_create(0, 0, 0, lines)
@@ -61,18 +67,24 @@ text = 'sample text 2'
 lines = [text]
 textarea = textarea_create(1, 500, 500, lines)
 textareas.append(textarea)
+'''
 
 textarea_i = 0
 
-cell_size = 100
+cell_size = 64
+
+data_filepath = 'data/1.json'
 
 def save_json():
-    with open('data.json', 'w', encoding='utf-8') as f:
+    with open(data_filepath, 'w', encoding='utf-8') as f:
         json.dump(textareas, f, indent=4, ensure_ascii=False)
 
 def load_json():
     global textareas
-    with open('data.json', 'r', encoding='utf-8') as f:
+    if not os.path.exists(data_filepath):
+        with open(data_filepath, 'w', encoding='utf-8') as f:
+            json.dump([], f, indent=4, ensure_ascii=False)
+    with open(data_filepath, 'r', encoding='utf-8') as f:
         textareas = json.load(f)
 
 load_json()
@@ -89,12 +101,14 @@ def main_input():
     global line_cursor_col_i
     global textareas
     global textarea_i
+    global data_filepath
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                running = False
+                # running = False
+                pass
             elif event.key == pygame.K_UP:
                 if line_cursor_row_i > 0:
                     line_cursor_row_i -= 1
@@ -159,8 +173,48 @@ def main_input():
                 save_json()
             elif event.key == pygame.K_l and (pygame.key.get_mods() & pygame.KMOD_CTRL):
                 load_json()
+            elif event.key == pygame.K_0 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                data_filepath = 'data/0.json'
+                load_json()
+            elif event.key == pygame.K_1 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                data_filepath = 'data/1.json'
+                load_json()
+            elif event.key == pygame.K_2 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                data_filepath = 'data/2.json'
+                load_json()
+            elif event.key == pygame.K_3 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                data_filepath = 'data/3.json'
+                load_json()
+            elif event.key == pygame.K_4 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                data_filepath = 'data/4.json'
+                load_json()
+            elif event.key == pygame.K_5 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                data_filepath = 'data/5.json'
+                load_json()
+            elif event.key == pygame.K_6 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                data_filepath = 'data/6.json'
+                load_json()
+            elif event.key == pygame.K_7 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                data_filepath = 'data/7.json'
+                load_json()
+            elif event.key == pygame.K_8 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                data_filepath = 'data/8.json'
+                load_json()
+            elif event.key == pygame.K_9 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                data_filepath = 'data/9.json'
+                load_json()
+            elif event.key == pygame.K_x and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                del textareas[textarea_i]
+                textarea_i = -1
             # elif event.unicode.isprintable():
-            elif pygame.K_a <= event.key <= pygame.K_z or event.key == pygame.K_SPACE:
+            elif (
+                    pygame.K_a <= event.key <= pygame.K_z or 
+                    pygame.K_0 <= event.key <= pygame.K_9 or 
+                    (event.key == pygame.K_9 and (pygame.key.get_mods() & pygame.KMOD_SHIFT)) or 
+                    (event.key == pygame.K_0 and (pygame.key.get_mods() & pygame.KMOD_SHIFT)) or 
+                    event.key == pygame.K_SPACE or event.key == pygame.K_MINUS or 
+                    event.key == pygame.K_COMMA or event.key == pygame.K_PERIOD  
+            ):
                 line_chunk_1 = textareas[textarea_i]['lines'][line_cursor_row_i][:line_cursor_col_i]
                 line_chunk_2 = textareas[textarea_i]['lines'][line_cursor_row_i][line_cursor_col_i:]
                 textareas[textarea_i]['lines'][line_cursor_row_i] = line_chunk_1 + event.unicode + line_chunk_2
@@ -216,7 +270,10 @@ def main_input():
         if mouse['right_click_action_executing'] == 0:
             mouse['right_click_action_executing'] = 1
             ### get last id
-            id_next = textareas[-1]['id'] + 1
+            if textareas != []:
+                id_next = textareas[-1]['id'] + 1
+            else:
+                id_next = 0
             textarea = textarea_create(id_next, mouse['screen_x'], mouse['screen_y'], ['edit me'])
             textareas.append(textarea)
     else: 
@@ -306,12 +363,12 @@ def render_grid():
         x1 = ((cell_size * col_i) + camera['pan_x']) * camera['zoom'] + offset_x
         y1 = 0
         x2 = ((cell_size * col_i) + camera['pan_x']) * camera['zoom'] + offset_x
-        y2 = window_h
+        y2 = window_h * 4
         pygame.draw.line(window, color, (x1, y1), (x2, y2), 1)
     for row_i in range(-100, 100):
         x1 = 0
         y1 = ((cell_size * row_i) + camera['pan_y']) * camera['zoom'] + offset_y
-        x2 = window_w
+        x2 = window_w * 4
         y2 = ((cell_size * row_i) + camera['pan_y']) * camera['zoom'] + offset_y
         pygame.draw.line(window, color, (x1, y1), (x2, y2), 1)
     if 0:

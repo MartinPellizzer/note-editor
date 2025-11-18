@@ -1,0 +1,61 @@
+[
+    {
+        "id": 0,
+        "world_x": 768,
+        "world_y": 448,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 126,
+        "screen_y": 294,
+        "screen_w": 126,
+        "screen_h": 27,
+        "lines": [
+            "CHEMISTRY"
+        ]
+    },
+    {
+        "id": 1,
+        "world_x": 896,
+        "world_y": 448,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 510,
+        "screen_y": 294,
+        "screen_w": 560,
+        "screen_h": 864,
+        "lines": [
+            "INTRO",
+            "",
+            "--- Matter ---",
+            "",
+            "- mixtures",
+            "  - heterogeneous",
+            "  - homogeneous (solution)",
+            "- pure substances",
+            "  - elements",
+            "  - compounds",
+            "",
+            "--- Atoms and Molecules ---",
+            "",
+            "- atom",
+            "  - particle of element",
+            "- molecule",
+            "  - 2 plus atoms",
+            "",
+            "--- Physical and Chemical Properties ---",
+            "",
+            "- physical",
+            "  - density",
+            "  - color",
+            "  - hardness",
+            "  - melting-boiling points",
+            "  - electrical conductivity",
+            "- chemical",
+            "  - flammability",
+            "  - toxicity",
+            "  - acidity",
+            "- expensive property",
+            "- intensive property"
+        ]
+    }
+]

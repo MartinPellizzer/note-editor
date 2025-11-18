@@ -1,0 +1,289 @@
+[
+    {
+        "id": 0,
+        "world_x": 768,
+        "world_y": 448,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 214,
+        "screen_y": 394,
+        "screen_w": 90,
+        "screen_h": 9,
+        "lines": [
+            "Apothecary Academy"
+        ]
+    },
+    {
+        "id": 1,
+        "world_x": 960,
+        "world_y": 448,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 406,
+        "screen_y": 394,
+        "screen_w": 95,
+        "screen_h": 9,
+        "lines": [
+            "Herbal Preparations"
+        ]
+    },
+    {
+        "id": 2,
+        "world_x": 960,
+        "world_y": 512,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 406,
+        "screen_y": 458,
+        "screen_w": 45,
+        "screen_h": 9,
+        "lines": [
+            "Tinctures"
+        ]
+    },
+    {
+        "id": 3,
+        "world_x": 960,
+        "world_y": 576,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 406,
+        "screen_y": 522,
+        "screen_w": 20,
+        "screen_h": 9,
+        "lines": [
+            "Teas"
+        ]
+    },
+    {
+        "id": 4,
+        "world_x": 960,
+        "world_y": 640,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 406,
+        "screen_y": 586,
+        "screen_w": 30,
+        "screen_h": 9,
+        "lines": [
+            "Salves"
+        ]
+    },
+    {
+        "id": 5,
+        "world_x": 960,
+        "world_y": 704,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 406,
+        "screen_y": 650,
+        "screen_w": 35,
+        "screen_h": 9,
+        "lines": [
+            "Lotions"
+        ]
+    },
+    {
+        "id": 6,
+        "world_x": 1152,
+        "world_y": 448,
+        "world_w": 100,
+        "world_h": 100,
+        "screen_x": 598,
+        "screen_y": 394,
+        "screen_w": 155,
+        "screen_h": 153,
+        "lines": [
+            "Lotions",
+            "",
+            "Introduction",
+            "",
+            "Lotion Fundamentals",
+            "",
+            "Equipment and Ingredients",
+            "",
+            "Step by Step Lotion Making",
+            "",
+            "Troubleshooting Common Issues",
+            "",
+            "Advanced Tips and Customization",
+            "",
+            "Safety Storage and Shelf Life",
+            "",
+            "Recap and Next Step"
+        ]
+    },
+    {
+        "id": 7,
+        "world_x": 1022.0,
+        "world_y": 319.5,
+        "world_w": 70,
+        "world_h": 18,
+        "screen_x": 468.0,
+        "screen_y": 265.5,
+        "screen_w": 35,
+        "screen_h": 9,
+        "lines": [
+            "edit me"
+        ]
+    },
+    {
+        "id": 8,
+        "world_x": 1344,
+        "world_y": 320,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 790,
+        "screen_y": 266,
+        "screen_w": 150,
+        "screen_h": 45,
+        "lines": [
+            "Introduction and Foundamentals",
+            "",
+            "Welcome and Purpose",
+            "Understanding Lotion Basics",
+            "The Skin and Herbal Benefits"
+        ]
+    },
+    {
+        "id": 9,
+        "world_x": 1536,
+        "world_y": 320,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 982,
+        "screen_y": 266,
+        "screen_w": 130,
+        "screen_h": 81,
+        "lines": [
+            "Lotion Science Made Simple",
+            "",
+            "Structure of a Lotion",
+            "Core Ingrediets",
+            "  Water Phase",
+            "  Oil Phase",
+            "  Emulsifiers",
+            "  Preservatives",
+            "  Additives"
+        ]
+    },
+    {
+        "id": 10,
+        "world_x": 1728,
+        "world_y": 320,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 1174,
+        "screen_y": 266,
+        "screen_w": 170,
+        "screen_h": 36,
+        "lines": [
+            "PART Tools Safety and Preparations",
+            "",
+            "Tools and Setup",
+            "Safety Essentials"
+        ]
+    },
+    {
+        "id": 11,
+        "world_x": 1920,
+        "world_y": 320,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 1366,
+        "screen_y": 266,
+        "screen_w": 225,
+        "screen_h": 72,
+        "lines": [
+            "PART The Complete Step by Step Making Process",
+            "",
+            "Preparation",
+            "Making The Infusion",
+            "Oil Phase",
+            "Emulsification",
+            "Cooling Phase",
+            "Packaging"
+        ]
+    },
+    {
+        "id": 12,
+        "world_x": 2304,
+        "world_y": 320,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 1750,
+        "screen_y": 266,
+        "screen_w": 410,
+        "screen_h": 486,
+        "lines": [
+            "LOTIONS BOOK NOTES",
+            "",
+            "BOOKS",
+            "Aromatherapy a complete guide to the healing art by kathy keville and mindy green",
+            "",
+            "INGREDIENTS",
+            "Oil",
+            "Water",
+            "Emulsifier to blend oil and water",
+            "  beeswax   hydrous lanolin   glicerin   lecithin",
+            "Herbal oil infusions",
+            "",
+            "STERILIZATION",
+            "sterilize all equipment and containers with lids",
+            "dont touch anything with your finger during production",
+            "preservative agents",
+            "  essential oils",
+            "  vitamin e oil",
+            "refrigeration",
+            "",
+            "",
+            "",
+            "PROCEDURE",
+            "this preparation is gently astringent and anti inflammatory and moisturizing",
+            "toning agent for skin cleansing for sensitive dry wheather damaged and mature skin",
+            "soothing and healing for chapped or dry skin eczema or psoriasis",
+            "",
+            "mix rosewater and glycerin",
+            "add alcohol as preservative if you give it away",
+            "add arnica tincture if anti inflammatory",
+            "add calendula tincture for anti inflammatory vulnerary anti fungal",
+            "add goldenseal tincure and myrrh tincture for antiseptic",
+            "add comfrey tincture for vulnerary astringent and demulcent",
+            "  for external ulcers for washing wounds and fracures for varicose veins",
+            "",
+            "EQUIPMENT",
+            "all equip sterilized",
+            "kitchen blender",
+            "plastic spatula",
+            "chopstick",
+            "small funnel",
+            "glass measuring cup",
+            "metal saucepan",
+            "grater",
+            "small glass jar containers",
+            "paper towels or tissues",
+            "",
+            "INGREDIENTS",
+            "fixed oil",
+            "distilled water",
+            "beeswax",
+            "",
+            "RECIPE",
+            ""
+        ]
+    },
+    {
+        "id": 13,
+        "world_x": 2304,
+        "world_y": 256,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 1750,
+        "screen_y": 202,
+        "screen_w": 40,
+        "screen_h": 9,
+        "lines": [
+            "new text"
+        ]
+    }
+]
