@@ -5,8 +5,8 @@
         "world_y": 448,
         "world_w": 0,
         "world_h": 0,
-        "screen_x": -1538,
-        "screen_y": -1670,
+        "screen_x": -1192,
+        "screen_y": -2320,
         "screen_w": 90,
         "screen_h": 18,
         "lines": [
@@ -19,8 +19,8 @@
         "world_y": 448,
         "world_w": 0,
         "world_h": 0,
-        "screen_x": -1282,
-        "screen_y": -1670,
+        "screen_x": -936,
+        "screen_y": -2320,
         "screen_w": 180,
         "screen_h": 18,
         "lines": [
@@ -33,8 +33,8 @@
         "world_y": 512,
         "world_w": 0,
         "world_h": 0,
-        "screen_x": -1282,
-        "screen_y": -1542,
+        "screen_x": -936,
+        "screen_y": -2192,
         "screen_w": 300,
         "screen_h": 810,
         "lines": [
@@ -91,8 +91,8 @@
         "world_y": 512,
         "world_w": 0,
         "world_h": 0,
-        "screen_x": -898,
-        "screen_y": -1542,
+        "screen_x": -552,
+        "screen_y": -2192,
         "screen_w": 410,
         "screen_h": 234,
         "lines": [
@@ -117,8 +117,8 @@
         "world_y": 512,
         "world_w": 0,
         "world_h": 0,
-        "screen_x": -386,
-        "screen_y": -1542,
+        "screen_x": -40,
+        "screen_y": -2192,
         "screen_w": 450,
         "screen_h": 252,
         "lines": [
@@ -144,8 +144,8 @@
         "world_y": 448,
         "world_w": 0,
         "world_h": 0,
-        "screen_x": -2562,
-        "screen_y": -1670,
+        "screen_x": -2216,
+        "screen_y": -2320,
         "screen_w": 100,
         "screen_h": 18,
         "lines": [
@@ -158,10 +158,10 @@
         "world_y": 512,
         "world_w": 0,
         "world_h": 0,
-        "screen_x": 126,
-        "screen_y": -1542,
+        "screen_x": 472,
+        "screen_y": -2192,
         "screen_w": 1020,
-        "screen_h": 2898,
+        "screen_h": 3078,
         "lines": [
             "--------------------",
             "OFFER",
@@ -323,7 +323,17 @@
             "- gather as much info about your market as possible",
             "- list out 10 latent conditions that drive your market",
             "",
-            "--- Imperium Offer Creation Worksheet ---"
+            "--- Imperium Offer Creation Worksheet ---",
+            "",
+            "- check worksheet",
+            "",
+            "--- Offer Assert Creation ---",
+            "",
+            "- check worksheet",
+            "",
+            "--- Creating You Pitch ---",
+            "",
+            "- check worksheet"
         ]
     }
 ]
