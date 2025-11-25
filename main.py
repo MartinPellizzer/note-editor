@@ -105,11 +105,44 @@ keyboard = {
 
 def input_keyboard_mode_normal(event):
     global running
+    global line_cursor_row_i
+    global line_cursor_col_i
+    global textareas
+    global textarea_i
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_ESCAPE:
             running = False
             pass
         elif event.key == pygame.K_i:
+            core['editor_mode'] = 1
+        elif event.key == pygame.K_k:
+            if line_cursor_row_i > 0:
+                line_cursor_row_i -= 1
+                if line_cursor_col_i > len(textareas[textarea_i]['lines'][line_cursor_row_i]):
+                    line_cursor_col_i = len(textareas[textarea_i]['lines'][line_cursor_row_i])
+            else:
+                line_cursor_col_i = 0
+        elif event.key == pygame.K_j:
+            if line_cursor_row_i < len(textareas[textarea_i]['lines'])-1:
+                line_cursor_row_i += 1
+                if line_cursor_col_i > len(textareas[textarea_i]['lines'][line_cursor_row_i]):
+                    line_cursor_col_i = len(textareas[textarea_i]['lines'][line_cursor_row_i])
+            else:
+                line_cursor_col_i = len(textareas[textarea_i]['lines'][line_cursor_row_i])
+        elif event.key == pygame.K_h:
+            if line_cursor_col_i > 0:
+                line_cursor_col_i -= 1
+        elif event.key == pygame.K_l:
+            if line_cursor_col_i < len(textareas[textarea_i]['lines'][line_cursor_row_i]):
+                line_cursor_col_i += 1
+        elif event.key == pygame.K_o:
+            line_cur = textareas[textarea_i]['lines'][line_cursor_row_i]
+            line_chunk_1 = line_cur[:]
+            line_chunk_2 = ''
+            textareas[textarea_i]['lines'][line_cursor_row_i] = line_chunk_1
+            textareas[textarea_i]['lines'].insert(line_cursor_row_i + 1, line_chunk_2)
+            line_cursor_col_i = 0
+            line_cursor_row_i += 1
             core['editor_mode'] = 1
 
 def input_keyboard_mode_insert(event):
@@ -143,7 +176,6 @@ def main_input():
                         textareas[textarea_i]['lines'][line_cursor_row_i] = line_cur
                         line_cursor_col_i -= 1
                         continue
-
                 if event.key == pygame.K_ESCAPE:
                     running = False
                     pass
