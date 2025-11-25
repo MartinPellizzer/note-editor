@@ -11,8 +11,8 @@ offset_x = 0
 offset_y = 0
 
 pygame.init()
-window_w = 1280
-window_h = 720
+window_w = 1920
+window_h = 1080
 window = pygame.display.set_mode(
     (window_w, window_h),
     pygame.RESIZABLE,
