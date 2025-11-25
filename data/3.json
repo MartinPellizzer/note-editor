@@ -1,1 +1,72 @@
-[]
+[
+    {
+        "id": 0,
+        "world_x": 768,
+        "world_y": 512,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 58,
+        "screen_y": 348,
+        "screen_w": 120,
+        "screen_h": 18,
+        "lines": [
+            "TERRAWHISPER"
+        ]
+    },
+    {
+        "id": 1,
+        "world_x": 1088,
+        "world_y": 512,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 698,
+        "screen_y": 348,
+        "screen_w": 70,
+        "screen_h": 18,
+        "lines": [
+            "WEBSITE"
+        ]
+    },
+    {
+        "id": 2,
+        "world_x": 1088,
+        "world_y": 640,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 698,
+        "screen_y": 604,
+        "screen_w": 50,
+        "screen_h": 18,
+        "lines": [
+            "HERBS"
+        ]
+    },
+    {
+        "id": 3,
+        "world_x": 1088,
+        "world_y": 576,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 698,
+        "screen_y": 476,
+        "screen_w": 60,
+        "screen_h": 18,
+        "lines": [
+            "DOMAIN"
+        ]
+    },
+    {
+        "id": 4,
+        "world_x": 1088,
+        "world_y": 704,
+        "world_w": 0,
+        "world_h": 0,
+        "screen_x": 698,
+        "screen_y": 732,
+        "screen_w": 140,
+        "screen_h": 18,
+        "lines": [
+            "HERB (ARTICLE)"
+        ]
+    }
+]

@@ -49,6 +49,10 @@ def pan_start(pygame):
 def pan_stop():
     mouse['pan_executing'] = 0
 
+def pan_reset():
+    camera['pan_x'] = 0
+    camera['pan_y'] = 0
+
 def zoom_pos_center(window_w, window_h):
     cx = window_w // 2
     cy = window_h // 2

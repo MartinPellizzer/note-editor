@@ -12,7 +12,9 @@ offset_y = 0
 
 pygame.init()
 window_w = 1280
+window_w = 1920
 window_h = 720
+window_h = 1080
 window = pygame.display.set_mode(
     (window_w, window_h),
     pygame.RESIZABLE,
@@ -109,6 +111,8 @@ def main_input():
             if event.key == pygame.K_ESCAPE:
                 # running = False
                 pass
+            elif event.key == pygame.K_PERIOD and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                nav.pan_reset()
             elif event.key == pygame.K_UP:
                 if line_cursor_row_i > 0:
                     line_cursor_row_i -= 1
