@@ -18,10 +18,10 @@ core = {
 }
 
 pygame.init()
-window_w = 1280
 window_w = 1920
-window_h = 720
+window_w = 1280
 window_h = 1080
+window_h = 720
 window = pygame.display.set_mode(
     (window_w, window_h),
     pygame.RESIZABLE,
@@ -83,7 +83,7 @@ textarea_i = 0
 
 cell_size = 64
 
-data_filepath = 'data/9.json'
+data_filepath = 'data/1.json'
 
 def save_json():
     with open(data_filepath, 'w', encoding='utf-8') as f:
