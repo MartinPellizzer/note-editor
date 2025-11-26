@@ -12,29 +12,34 @@ offset_x = 0
 offset_y = 0
 
 core = {
+    'window_w': 1280,
+    'window_h': 720,
     'editor_mode': 0,
     'last_k_time': 0,
     'kj_timeout': 0.25,
+    'command_string': '',
 }
 
 pygame.init()
-window_w = 1920
-window_w = 1280
-window_h = 1080
-window_h = 720
+core['window_w'] = 1280
+core['window_w'] = 1920
+core['window_h'] = 720
+core['window_h'] = 1080
 window = pygame.display.set_mode(
-    (window_w, window_h),
+    (core['window_w'], core['window_h']),
     pygame.RESIZABLE,
 )
 clock = pygame.time.Clock()
 pygame.key.set_repeat(300, 50)
 font_filepath = f'''fonts/CourierPrime-Regular.ttf'''
-camera['zoom'] = 2
-font_md_base = 8
+camera['zoom'] = 1
+font_md_base = 1
 font_md_world = pygame.font.Font(font_filepath, font_md_base)
 font_md = pygame.font.Font(font_filepath, font_md_base * camera['zoom'])
-font_sm_base = 16
+font_sm_base = 2
 font_sm = pygame.font.Font(font_filepath, font_sm_base * camera['zoom'])
+font_cmd_base = 16
+font_cmd = pygame.font.Font(font_filepath, font_cmd_base)
 
 def text_world_coords_get():
     line_char_num_max = 0
@@ -111,10 +116,12 @@ def input_keyboard_mode_normal(event):
     global textarea_i
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_ESCAPE:
-            running = False
+            # running = False
             pass
         elif event.key == pygame.K_i:
             core['editor_mode'] = 1
+        elif event.unicode == ':':
+            core['editor_mode'] = 2
         elif event.key == pygame.K_k:
             if line_cursor_row_i > 0:
                 line_cursor_row_i -= 1
@@ -145,6 +152,26 @@ def input_keyboard_mode_normal(event):
             line_cursor_row_i += 1
             core['editor_mode'] = 1
 
+def command_exe():
+    if core['command_string'] == 'w':
+        save_json()
+        print('here')
+
+def input_keyboard_mode_command(event):
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_ESCAPE:
+            # running = False
+            pass
+        elif event.key == pygame.K_RETURN:
+            core['editor_mode'] = 0
+            command_exe()
+            core['command_string'] = ''
+        elif (
+                pygame.K_a <= event.key <= pygame.K_z or 
+                pygame.K_0 <= event.key <= pygame.K_9
+        ):
+            core['command_string'] += event.unicode
+
 def input_keyboard_mode_insert(event):
     pass
 
@@ -162,6 +189,8 @@ def main_input():
             running = False
         if core['editor_mode'] == 0:
             input_keyboard_mode_normal(event)
+        elif core['editor_mode'] == 2:
+            input_keyboard_mode_command(event)
         elif core['editor_mode'] == 1:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_k:
@@ -177,7 +206,7 @@ def main_input():
                         line_cursor_col_i -= 1
                         continue
                 if event.key == pygame.K_ESCAPE:
-                    running = False
+                    # running = False
                     pass
                 elif event.key == pygame.K_PERIOD and (pygame.key.get_mods() & pygame.KMOD_CTRL):
                     nav.pan_reset()
@@ -299,7 +328,7 @@ def main_input():
                 keyboard['control_pressed'] = False
         if event.type == pygame.MOUSEWHEEL:
             if event.y > 0:
-                if camera['zoom'] < 16:
+                if camera['zoom'] < 32:
                     camera['zoom'] += 1
                     font_md = pygame.font.Font(font_filepath, font_md_base * camera['zoom'])
                     font_sm = pygame.font.Font(font_filepath, font_sm_base * camera['zoom'])
@@ -309,7 +338,7 @@ def main_input():
                     font_md = pygame.font.Font(font_filepath, font_md_base * camera['zoom'])
                     font_sm = pygame.font.Font(font_filepath, font_sm_base * camera['zoom'])
 
-    nav.mouse_pos_get(pygame, window_w, window_h)
+    nav.mouse_pos_get(pygame, core['window_w'], core['window_h'])
     if pygame.mouse.get_pressed()[0]:
         if mouse['action_executing'] == 0:
             mouse['action_executing'] = 1
@@ -354,7 +383,8 @@ def main_input():
 def main_update():
     global offset_x
     global offset_y
-    offset_x, offset_y = nav.zoom_pos_center(window_w, window_h)
+    core['window_w'], core['window_h'] = window.get_size()
+    offset_x, offset_y = nav.zoom_pos_center(core['window_w'], core['window_h'])
     for textarea in textareas:
         textarea['screen_x'] = (textarea['world_x'] + camera['pan_x']) * camera['zoom'] + offset_x
         textarea['screen_y'] = (textarea['world_y'] + camera['pan_y']) * camera['zoom'] + offset_y
@@ -412,6 +442,7 @@ def render_text():
             x = start_x + char_w * line_cursor_col_i
             y = start_y + char_h * line_cursor_row_i
             w = 1 * camera['zoom']
+            w = 1
             h = line_h
             pygame.draw.rect(window, "#ffffff", (x, y, w, h))
         # debug
@@ -435,12 +466,12 @@ def render_grid():
         x1 = ((cell_size * col_i) + camera['pan_x']) * camera['zoom'] + offset_x
         y1 = 0
         x2 = ((cell_size * col_i) + camera['pan_x']) * camera['zoom'] + offset_x
-        y2 = window_h * 4
+        y2 = core['window_h'] * 4
         pygame.draw.line(window, color, (x1, y1), (x2, y2), 1)
     for row_i in range(-100, 100):
         x1 = 0
         y1 = ((cell_size * row_i) + camera['pan_y']) * camera['zoom'] + offset_y
-        x2 = window_w * 4
+        x2 = core['window_w'] * 4
         y2 = ((cell_size * row_i) + camera['pan_y']) * camera['zoom'] + offset_y
         pygame.draw.line(window, color, (x1, y1), (x2, y2), 1)
     if 0:
@@ -458,10 +489,18 @@ def render_grid():
                     text_surface = font_sm.render(f'y:{world_y}', True, color)
                     window.blit(text_surface, (x, y+16*camera['zoom']))
 
+def render_command():
+    cmd_h = 32
+    pygame.draw.rect(window, "#222222", (0, core['window_h']-cmd_h, core['window_w'], core['window_h']))
+    if core['editor_mode'] == 2:
+        text_surface = font_cmd.render(f''':{core['command_string']}''', True, '#ffffff')
+        window.blit(text_surface, (16, core['window_h']-cmd_h//2-font_cmd_base//2))
+
 def main_render():
     window.fill('#111111')
     render_grid()
     render_text()
+    render_command()
     # debug
     if 0:
         text_surface = font_md.render(f'''{mouse['world_x']} - {mouse['world_y']}''', True, '0xFF00FF00')
@@ -474,6 +513,9 @@ def main_render():
             window.blit(text_surface, (600, 0))
         elif core['editor_mode'] == 1:
             text_surface = font_md.render(f'''INSERT MODE''', True, '0xFF00FF00')
+            window.blit(text_surface, (600, 0))
+        elif core['editor_mode'] == 2:
+            text_surface = font_md.render(f'''COMMAND MODE''', True, '0xFF00FF00')
             window.blit(text_surface, (600, 0))
     pygame.display.flip()
     clock.tick(60)
