@@ -128,18 +128,32 @@ def input_keyboard_mode_normal(event):
         elif event.key == pygame.K_a:
             core['line_cursor_col_i'] += 1
             core['editor_mode'] = 1
-        elif event.key == pygame.K_w:
-            for i in range(99):
-                if core['line_cursor_col_i'] < len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])-1:
-                    core['line_cursor_col_i'] += 1
-                    if textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']][core['line_cursor_col_i']] == ' ':
-                        break
         elif event.key == pygame.K_b:
             for i in range(99):
                 if core['line_cursor_col_i'] > 0:
                     core['line_cursor_col_i'] -= 1
                     if textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']][core['line_cursor_col_i']] == ' ':
                         break
+        elif event.key == pygame.K_w:
+            for i in range(99):
+                if core['line_cursor_col_i'] < len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])-1:
+                    core['line_cursor_col_i'] += 1
+                    if textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']][core['line_cursor_col_i']] == ' ':
+                        break
+        elif event.key == pygame.K_LEFTBRACKET and (event.mod & pygame.KMOD_SHIFT):
+            for i in range(9999):
+                if core['line_cursor_row_i'] > 0:
+                    core['line_cursor_row_i'] -= 1
+                    if textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']].strip() == '':
+                        break
+            core['line_cursor_col_i'] = 0
+        elif event.key == pygame.K_RIGHTBRACKET and (event.mod & pygame.KMOD_SHIFT):
+            for i in range(9999):
+                if core['line_cursor_row_i'] < len(textareas[core['textarea_i']]['lines'])-1:
+                    core['line_cursor_row_i'] += 1
+                    if textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']].strip() == '':
+                        break
+            core['line_cursor_col_i'] = 0
         elif event.unicode == ':':
             core['editor_mode'] = 2
         elif event.key == pygame.K_k:
@@ -202,6 +216,8 @@ def input_keyboard_mode_insert(event):
                 line_cur = f'{line_chunk_1}{line_chunk_2}'
                 textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']] = line_cur
                 core['line_cursor_col_i'] -= 2
+                if core['line_cursor_col_i'] < 0: 
+                    core['line_cursor_col_i'] = 0
                 return
         if 0:
             pass
