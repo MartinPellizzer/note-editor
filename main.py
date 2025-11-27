@@ -24,6 +24,7 @@ core = {
     'line_cursor_row_i': 0,
     'data_filepath': '',
 }
+core['data_filepath'] = 'data/1.json'
 
 pygame.init()
 core['window_w'] = 1280
@@ -37,7 +38,7 @@ window = pygame.display.set_mode(
 clock = pygame.time.Clock()
 pygame.key.set_repeat(300, 50)
 font_filepath = f'''fonts/CourierPrime-Regular.ttf'''
-camera['zoom'] = 16
+camera['zoom'] = 1
 font_md_base = 1
 font_md_world = pygame.font.Font(font_filepath, font_md_base)
 font_md = pygame.font.Font(font_filepath, font_md_base * camera['zoom'])
@@ -89,7 +90,6 @@ textareas.append(textarea)
 
 cell_size = 64
 
-core['data_filepath'] = 'data/9.json'
 
 def save_json():
     with open(core['data_filepath'], 'w', encoding='utf-8') as f:
