@@ -18,6 +18,11 @@ core = {
     'last_k_time': 0,
     'kj_timeout': 0.25,
     'command_string': '',
+    'running': True,
+    'textarea_i': -1,
+    'line_cursor_col_i': 0,
+    'line_cursor_row_i': 0,
+    'data_filepath': '',
 }
 
 pygame.init()
@@ -32,7 +37,7 @@ window = pygame.display.set_mode(
 clock = pygame.time.Clock()
 pygame.key.set_repeat(300, 50)
 font_filepath = f'''fonts/CourierPrime-Regular.ttf'''
-camera['zoom'] = 1
+camera['zoom'] = 16
 font_md_base = 1
 font_md_world = pygame.font.Font(font_filepath, font_md_base)
 font_md = pygame.font.Font(font_filepath, font_md_base * camera['zoom'])
@@ -68,8 +73,6 @@ def textarea_create(_id, world_x, world_y, lines):
     # obj['world_w'], obj['world_h'] = text_world_coords_get()
     return obj
 
-line_cursor_row_i = 0
-line_cursor_col_i = 0
 textareas = []
 
 '''
@@ -84,22 +87,20 @@ textarea = textarea_create(1, 500, 500, lines)
 textareas.append(textarea)
 '''
 
-textarea_i = 0
-
 cell_size = 64
 
-data_filepath = 'data/1.json'
+core['data_filepath'] = 'data/9.json'
 
 def save_json():
-    with open(data_filepath, 'w', encoding='utf-8') as f:
+    with open(core['data_filepath'], 'w', encoding='utf-8') as f:
         json.dump(textareas, f, indent=4, ensure_ascii=False)
 
 def load_json():
     global textareas
-    if not os.path.exists(data_filepath):
-        with open(data_filepath, 'w', encoding='utf-8') as f:
+    if not os.path.exists(core['data_filepath']):
+        with open(core['data_filepath'], 'w', encoding='utf-8') as f:
             json.dump([], f, indent=4, ensure_ascii=False)
-    with open(data_filepath, 'r', encoding='utf-8') as f:
+    with open(core['data_filepath'], 'r', encoding='utf-8') as f:
         textareas = json.load(f)
 
 load_json()
@@ -108,59 +109,69 @@ keyboard = {
     'control_pressed': False,
 }
 
+def command_exe():
+    if core['command_string'] == 'w':
+        save_json() 
+        print('here')
+
 def input_keyboard_mode_normal(event):
-    global running
-    global line_cursor_row_i
-    global line_cursor_col_i
     global textareas
-    global textarea_i
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_ESCAPE:
-            # running = False
+            # core['running'] = False
             pass
         elif event.key == pygame.K_i:
             core['editor_mode'] = 1
+        elif event.key == pygame.K_a and (event.mod & pygame.KMOD_SHIFT):
+            core['line_cursor_col_i'] += len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])
+            core['editor_mode'] = 1
+        elif event.key == pygame.K_a:
+            core['line_cursor_col_i'] += 1
+            core['editor_mode'] = 1
+        elif event.key == pygame.K_w:
+            for i in range(99):
+                if core['line_cursor_col_i'] < len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])-1:
+                    core['line_cursor_col_i'] += 1
+                    if textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']][core['line_cursor_col_i']] == ' ':
+                        break
+        elif event.key == pygame.K_b:
+            for i in range(99):
+                if core['line_cursor_col_i'] > 0:
+                    core['line_cursor_col_i'] -= 1
+                    if textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']][core['line_cursor_col_i']] == ' ':
+                        break
         elif event.unicode == ':':
             core['editor_mode'] = 2
         elif event.key == pygame.K_k:
-            if line_cursor_row_i > 0:
-                line_cursor_row_i -= 1
-                if line_cursor_col_i > len(textareas[textarea_i]['lines'][line_cursor_row_i]):
-                    line_cursor_col_i = len(textareas[textarea_i]['lines'][line_cursor_row_i])
-            else:
-                line_cursor_col_i = 0
+            if core['line_cursor_row_i'] > 0:
+                core['line_cursor_row_i'] -= 1
+                if core['line_cursor_col_i'] > len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]):
+                    core['line_cursor_col_i'] = len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])
         elif event.key == pygame.K_j:
-            if line_cursor_row_i < len(textareas[textarea_i]['lines'])-1:
-                line_cursor_row_i += 1
-                if line_cursor_col_i > len(textareas[textarea_i]['lines'][line_cursor_row_i]):
-                    line_cursor_col_i = len(textareas[textarea_i]['lines'][line_cursor_row_i])
-            else:
-                line_cursor_col_i = len(textareas[textarea_i]['lines'][line_cursor_row_i])
+            if core['line_cursor_row_i'] < len(textareas[core['textarea_i']]['lines'])-1:
+                core['line_cursor_row_i'] += 1
+                if core['line_cursor_col_i'] > len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]):
+                    core['line_cursor_col_i'] = len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])
         elif event.key == pygame.K_h:
-            if line_cursor_col_i > 0:
-                line_cursor_col_i -= 1
+            if core['line_cursor_col_i'] > 0:
+                core['line_cursor_col_i'] -= 1
         elif event.key == pygame.K_l:
-            if line_cursor_col_i < len(textareas[textarea_i]['lines'][line_cursor_row_i]):
-                line_cursor_col_i += 1
+            if core['line_cursor_col_i'] < len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])-1:
+                core['line_cursor_col_i'] += 1
         elif event.key == pygame.K_o:
-            line_cur = textareas[textarea_i]['lines'][line_cursor_row_i]
+            line_cur = textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]
             line_chunk_1 = line_cur[:]
             line_chunk_2 = ''
-            textareas[textarea_i]['lines'][line_cursor_row_i] = line_chunk_1
-            textareas[textarea_i]['lines'].insert(line_cursor_row_i + 1, line_chunk_2)
-            line_cursor_col_i = 0
-            line_cursor_row_i += 1
+            textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']] = line_chunk_1
+            textareas[core['textarea_i']]['lines'].insert(core['line_cursor_row_i'] + 1, line_chunk_2)
+            core['line_cursor_col_i'] = 0
+            core['line_cursor_row_i'] += 1
             core['editor_mode'] = 1
-
-def command_exe():
-    if core['command_string'] == 'w':
-        save_json()
-        print('here')
 
 def input_keyboard_mode_command(event):
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_ESCAPE:
-            # running = False
+            # core['running'] = False
             pass
         elif event.key == pygame.K_RETURN:
             core['editor_mode'] = 0
@@ -172,160 +183,158 @@ def input_keyboard_mode_command(event):
         ):
             core['command_string'] += event.unicode
 
+def textarea_character_insert(event):
+    line_chunk_1 = textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']][:core['line_cursor_col_i']]
+    line_chunk_2 = textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']][core['line_cursor_col_i']:]
+    textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']] = line_chunk_1 + event.unicode + line_chunk_2
+    core['line_cursor_col_i'] += 1
+
 def input_keyboard_mode_insert(event):
-    pass
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_k:
+            core['last_k_time'] = time.time()
+        elif event.key == pygame.K_j:
+            if time.time() - core['last_k_time'] <= core['kj_timeout']:
+                core['editor_mode'] = 0
+                line_cur = textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]
+                line_chunk_1 = line_cur[:core['line_cursor_col_i']-1]
+                line_chunk_2 = line_cur[core['line_cursor_col_i']:]
+                line_cur = f'{line_chunk_1}{line_chunk_2}'
+                textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']] = line_cur
+                core['line_cursor_col_i'] -= 2
+                return
+        if 0:
+            pass
+        elif event.key == pygame.K_UP:
+            if core['line_cursor_row_i'] > 0:
+                core['line_cursor_row_i'] -= 1
+                if core['line_cursor_col_i'] > len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]):
+                    core['line_cursor_col_i'] = len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])
+            else:
+                core['line_cursor_col_i'] = 0
+        elif event.key == pygame.K_DOWN:
+            if core['line_cursor_row_i'] < len(textareas[core['textarea_i']]['lines'])-1:
+                core['line_cursor_row_i'] += 1
+                if core['line_cursor_col_i'] > len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]):
+                    core['line_cursor_col_i'] = len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])
+            else:
+                core['line_cursor_col_i'] = len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])
+        elif event.key == pygame.K_LEFT:
+            if core['line_cursor_col_i'] > 0:
+                core['line_cursor_col_i'] -= 1
+            else:
+                if core['line_cursor_row_i'] > 0:
+                    core['line_cursor_row_i'] -= 1
+                    core['line_cursor_col_i'] = len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])
+        elif event.key == pygame.K_RIGHT:
+            if core['line_cursor_col_i'] < len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]):
+                core['line_cursor_col_i'] += 1
+            else:
+                if core['line_cursor_row_i'] < len(textareas[core['textarea_i']]['lines'])-1:
+                    core['line_cursor_row_i'] += 1
+                    core['line_cursor_col_i'] = 0
+        elif event.key == pygame.K_BACKSPACE:
+            if core['line_cursor_col_i'] > 0:
+                line_cur = textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]
+                line_chunk_1 = line_cur[:core['line_cursor_col_i']-1]
+                line_chunk_2 = line_cur[core['line_cursor_col_i']:]
+                line_cur = f'{line_chunk_1}{line_chunk_2}'
+                textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']] = line_cur
+                core['line_cursor_col_i'] -= 1
+            else:
+                if core['line_cursor_row_i'] > 0:
+                    line_cur = textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]
+                    del textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]
+                    core['line_cursor_row_i'] -= 1
+                    core['line_cursor_col_i'] = len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']])
+                    textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']] += line_cur
+        elif event.key == pygame.K_DELETE:
+            if core['line_cursor_col_i'] < len(textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]):
+                line_cur = textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]
+                line_chunk_1 = line_cur[:core['line_cursor_col_i']]
+                line_chunk_2 = line_cur[core['line_cursor_col_i']+1:]
+                line_cur = f'{line_chunk_1}{line_chunk_2}'
+                textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']] = line_cur
+        elif event.key == pygame.K_RETURN:
+            line_cur = textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']]
+            line_chunk_1 = line_cur[:core['line_cursor_col_i']]
+            line_chunk_2 = line_cur[core['line_cursor_col_i']:]
+            textareas[core['textarea_i']]['lines'][core['line_cursor_row_i']] = line_chunk_1
+            textareas[core['textarea_i']]['lines'].insert(core['line_cursor_row_i'] + 1, line_chunk_2)
+            core['line_cursor_col_i'] = 0
+            core['line_cursor_row_i'] += 1
+        elif (
+                pygame.K_a <= event.key <= pygame.K_z or 
+                pygame.K_0 <= event.key <= pygame.K_9 or 
+                event.key == pygame.K_SPACE or event.key == pygame.K_MINUS or 
+                event.key == pygame.K_COMMA or event.key == pygame.K_PERIOD  
+        ):
+            textarea_character_insert(event)
+
+def input_keyboard_mode_global(event):
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_ESCAPE:
+            core['running'] = False
+        elif event.key == pygame.K_PERIOD and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            nav.pan_reset()
+        elif event.key == pygame.K_s and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            save_json()
+        elif event.key == pygame.K_l and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            load_json()
+        elif event.key == pygame.K_0 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            core['data_filepath'] = 'data/0.json'
+            load_json()
+            print('here')
+        elif event.key == pygame.K_1 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            core['data_filepath'] = 'data/1.json'
+            load_json()
+        elif event.key == pygame.K_2 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            core['data_filepath'] = 'data/2.json'
+            load_json()
+        elif event.key == pygame.K_3 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            core['data_filepath'] = 'data/3.json'
+            load_json()
+        elif event.key == pygame.K_4 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            core['data_filepath'] = 'data/4.json'
+            load_json()
+        elif event.key == pygame.K_5 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            core['data_filepath'] = 'data/5.json'
+            load_json()
+        elif event.key == pygame.K_6 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            core['data_filepath'] = 'data/6.json'
+            load_json()
+        elif event.key == pygame.K_7 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            core['data_filepath'] = 'data/7.json'
+            load_json()
+        elif event.key == pygame.K_8 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            core['data_filepath'] = 'data/8.json'
+            load_json()
+        elif event.key == pygame.K_9 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            core['data_filepath'] = 'data/9.json'
+            load_json()
+        elif event.key == pygame.K_x and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+            del textareas[core['textarea_i']]
+            core['textarea_i'] = -1
+        elif event.key == pygame.K_LCTRL:
+            keyboard['control_pressed'] = True
+    if event.type == pygame.KEYUP:
+        if event.key == pygame.K_LCTRL:
+            keyboard['control_pressed'] = False
 
 def main_input():
-    global running
     global font_sm
     global font_md
-    global line_cursor_row_i
-    global line_cursor_col_i
     global textareas
-    global textarea_i
-    global data_filepath
     for event in pygame.event.get():
+        input_keyboard_mode_global(event)
         if event.type == pygame.QUIT:
-            running = False
+            core['running'] = False
         if core['editor_mode'] == 0:
             input_keyboard_mode_normal(event)
         elif core['editor_mode'] == 2:
             input_keyboard_mode_command(event)
         elif core['editor_mode'] == 1:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_k:
-                    core['last_k_time'] = time.time()
-                elif event.key == pygame.K_j:
-                    if time.time() - core['last_k_time'] <= core['kj_timeout']:
-                        core['editor_mode'] = 0
-                        line_cur = textareas[textarea_i]['lines'][line_cursor_row_i]
-                        line_chunk_1 = line_cur[:line_cursor_col_i-1]
-                        line_chunk_2 = line_cur[line_cursor_col_i:]
-                        line_cur = f'{line_chunk_1}{line_chunk_2}'
-                        textareas[textarea_i]['lines'][line_cursor_row_i] = line_cur
-                        line_cursor_col_i -= 1
-                        continue
-                if event.key == pygame.K_ESCAPE:
-                    # running = False
-                    pass
-                elif event.key == pygame.K_PERIOD and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    nav.pan_reset()
-                elif event.key == pygame.K_UP:
-                    if line_cursor_row_i > 0:
-                        line_cursor_row_i -= 1
-                        if line_cursor_col_i > len(textareas[textarea_i]['lines'][line_cursor_row_i]):
-                            line_cursor_col_i = len(textareas[textarea_i]['lines'][line_cursor_row_i])
-                    else:
-                        line_cursor_col_i = 0
-                elif event.key == pygame.K_DOWN:
-                    if line_cursor_row_i < len(textareas[textarea_i]['lines'])-1:
-                        line_cursor_row_i += 1
-                        if line_cursor_col_i > len(textareas[textarea_i]['lines'][line_cursor_row_i]):
-                            line_cursor_col_i = len(textareas[textarea_i]['lines'][line_cursor_row_i])
-                    else:
-                        line_cursor_col_i = len(textareas[textarea_i]['lines'][line_cursor_row_i])
-                elif event.key == pygame.K_LEFT:
-                    if line_cursor_col_i > 0:
-                        line_cursor_col_i -= 1
-                    else:
-                        if line_cursor_row_i > 0:
-                            line_cursor_row_i -= 1
-                            line_cursor_col_i = len(textareas[textarea_i]['lines'][line_cursor_row_i])
-                elif event.key == pygame.K_RIGHT:
-                    if line_cursor_col_i < len(textareas[textarea_i]['lines'][line_cursor_row_i]):
-                        line_cursor_col_i += 1
-                    else:
-                        if line_cursor_row_i < len(textareas[textarea_i]['lines'])-1:
-                            line_cursor_row_i += 1
-                            line_cursor_col_i = 0
-                elif event.key == pygame.K_BACKSPACE:
-                    if line_cursor_col_i > 0:
-                        line_cur = textareas[textarea_i]['lines'][line_cursor_row_i]
-                        line_chunk_1 = line_cur[:line_cursor_col_i-1]
-                        line_chunk_2 = line_cur[line_cursor_col_i:]
-                        line_cur = f'{line_chunk_1}{line_chunk_2}'
-                        textareas[textarea_i]['lines'][line_cursor_row_i] = line_cur
-                        line_cursor_col_i -= 1
-                    else:
-                        if line_cursor_row_i > 0:
-                            line_cur = textareas[textarea_i]['lines'][line_cursor_row_i]
-                            del textareas[textarea_i]['lines'][line_cursor_row_i]
-                            line_cursor_row_i -= 1
-                            line_cursor_col_i = len(textareas[textarea_i]['lines'][line_cursor_row_i])
-                            textareas[textarea_i]['lines'][line_cursor_row_i] += line_cur
-                elif event.key == pygame.K_DELETE:
-                    if line_cursor_col_i < len(textareas[textarea_i]['lines'][line_cursor_row_i]):
-                        line_cur = textareas[textarea_i]['lines'][line_cursor_row_i]
-                        line_chunk_1 = line_cur[:line_cursor_col_i]
-                        line_chunk_2 = line_cur[line_cursor_col_i+1:]
-                        line_cur = f'{line_chunk_1}{line_chunk_2}'
-                        textareas[textarea_i]['lines'][line_cursor_row_i] = line_cur
-                elif event.key == pygame.K_RETURN and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    print('thidk')
-                elif event.key == pygame.K_RETURN:
-                    line_cur = textareas[textarea_i]['lines'][line_cursor_row_i]
-                    line_chunk_1 = line_cur[:line_cursor_col_i]
-                    line_chunk_2 = line_cur[line_cursor_col_i:]
-                    textareas[textarea_i]['lines'][line_cursor_row_i] = line_chunk_1
-                    textareas[textarea_i]['lines'].insert(line_cursor_row_i + 1, line_chunk_2)
-                    line_cursor_col_i = 0
-                    line_cursor_row_i += 1
-                elif event.key == pygame.K_s and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    save_json()
-                elif event.key == pygame.K_l and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    load_json()
-                elif event.key == pygame.K_0 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    data_filepath = 'data/0.json'
-                    load_json()
-                elif event.key == pygame.K_1 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    data_filepath = 'data/1.json'
-                    load_json()
-                elif event.key == pygame.K_2 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    data_filepath = 'data/2.json'
-                    load_json()
-                elif event.key == pygame.K_3 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    data_filepath = 'data/3.json'
-                    load_json()
-                elif event.key == pygame.K_4 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    data_filepath = 'data/4.json'
-                    load_json()
-                elif event.key == pygame.K_5 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    data_filepath = 'data/5.json'
-                    load_json()
-                elif event.key == pygame.K_6 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    data_filepath = 'data/6.json'
-                    load_json()
-                elif event.key == pygame.K_7 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    data_filepath = 'data/7.json'
-                    load_json()
-                elif event.key == pygame.K_8 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    data_filepath = 'data/8.json'
-                    load_json()
-                elif event.key == pygame.K_9 and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    data_filepath = 'data/9.json'
-                    load_json()
-                elif event.key == pygame.K_x and (pygame.key.get_mods() & pygame.KMOD_CTRL):
-                    del textareas[textarea_i]
-                    textarea_i = -1
-                # elif event.unicode.isprintable():
-                elif (
-                        pygame.K_a <= event.key <= pygame.K_z or 
-                        pygame.K_0 <= event.key <= pygame.K_9 or 
-                        (event.key == pygame.K_9 and (pygame.key.get_mods() & pygame.KMOD_SHIFT)) or 
-                        (event.key == pygame.K_0 and (pygame.key.get_mods() & pygame.KMOD_SHIFT)) or 
-                        event.key == pygame.K_SPACE or event.key == pygame.K_MINUS or 
-                        event.key == pygame.K_COMMA or event.key == pygame.K_PERIOD  
-                ):
-                    line_chunk_1 = textareas[textarea_i]['lines'][line_cursor_row_i][:line_cursor_col_i]
-                    line_chunk_2 = textareas[textarea_i]['lines'][line_cursor_row_i][line_cursor_col_i:]
-                    textareas[textarea_i]['lines'][line_cursor_row_i] = line_chunk_1 + event.unicode + line_chunk_2
-                    line_cursor_col_i += 1
-                    # textareas[textarea_i]['world_w'], textareas[textarea_i]['world_h'] = text_world_coords_get()
-                elif event.key == pygame.K_LCTRL:
-                    keyboard['control_pressed'] = True
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LCTRL:
-                keyboard['control_pressed'] = False
+            input_keyboard_mode_insert(event)
         if event.type == pygame.MOUSEWHEEL:
             if event.y > 0:
                 if camera['zoom'] < 32:
@@ -354,10 +363,10 @@ def main_input():
                     mouse['drag_node_start_x'] = textarea['world_x']
                     mouse['drag_node_start_y'] = textarea['world_y']
                     mouse['drag_executing'] = 1
-                    if textarea_i != textarea_index:
-                        line_cursor_col_i = 0
-                        line_cursor_row_i = 0
-                    textarea_i = textarea_index
+                    if core['textarea_i'] != textarea_index:
+                        core['line_cursor_col_i'] = 0
+                        core['line_cursor_row_i'] = 0
+                    core['textarea_i'] = textarea_index
                     break
     else: 
         mouse['action_executing'] = 0
@@ -436,11 +445,11 @@ def render_text():
             window.blit(line_surface, (line_x, line_y))
             line_i += 1
         # pygame.draw.rect(window, "#ffffff", (start_x, start_y, max_w, line_h*line_i), 1 * camera['zoom'])
-        if textarea_index == textarea_i:
+        if textarea_index == core['textarea_i']:
             ### cursor
             char_w, char_h = font_md.size('c')
-            x = start_x + char_w * line_cursor_col_i
-            y = start_y + char_h * line_cursor_row_i
+            x = start_x + char_w * core['line_cursor_col_i']
+            y = start_y + char_h * core['line_cursor_row_i']
             w = 1 * camera['zoom']
             w = 1
             h = line_h
@@ -520,8 +529,7 @@ def main_render():
     pygame.display.flip()
     clock.tick(60)
 
-running = True
-while running:
+while core['running']:
     main_input()
     main_update()
     main_render()
