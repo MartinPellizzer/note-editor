@@ -27,10 +27,10 @@ core = {
 core['data_filepath'] = 'data/1.json'
 
 pygame.init()
-core['window_w'] = 1920
 core['window_w'] = 1280
-core['window_h'] = 1080
+core['window_w'] = 1920
 core['window_h'] = 720
+core['window_h'] = 1080
 window = pygame.display.set_mode(
     (core['window_w'], core['window_h']),
     pygame.RESIZABLE,
